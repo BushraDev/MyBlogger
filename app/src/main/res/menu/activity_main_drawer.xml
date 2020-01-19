@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="nav_View">
+    <group>
+        <item android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:enabled="true"
+            android:title="Home" />
+        <item android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_star_border_black_24dp"
+            android:enabled="true"
+
+            android:title="Favorites" />
+
+    </group>
+
+    <group android:id="@+id/group_profile">
+        <item android:id="@+id/nav_account"
+            android:icon="@drawable/ic_perm_identity_black_24dp"
+            android:enabled="true"
+
+            android:title="Account" />
+
+        <item android:id="@+id/nav_switch_account"
+            android:icon="@drawable/ic_sync_black_24dp"
+            android:enabled="true"
+
+            android:title="Switch Account" />
+
+        <item android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:enabled="true"
+
+            android:title="Settings" />
+
+
+        <item android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_outline_black_24dp"
+            android:enabled="true"
+
+            android:title="Help" />
+
+
+    </group>
+
+
+</menu>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "121692639423",
+    "firebase_url": "https://fir-3f789.firebaseio.com",
+    "project_id": "fir-3f789",
+    "storage_bucket": "fir-3f789.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121692639423:android:dbeb62384686543602760a",
+        "android_client_info": {
+          "package_name": "com.bushra.myblogger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121692639423-9r9opq2410jn2cos8etrgcaek748f029.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bushra.myblogger",
+            "certificate_hash": "7efdec75c17ea6b37ede37c0b4f4cb46a69d3272"
+          }
+        },
+        {
+          "client_id": "121692639423-5fq549ln73movmio3tphhmvm8aq8jlr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEdfthO825ZsxRwxY8cxlvQRNwO6Ao4DE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121692639423-5fq549ln73movmio3tphhmvm8aq8jlr2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
