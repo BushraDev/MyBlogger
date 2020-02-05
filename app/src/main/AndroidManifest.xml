@@ -13,24 +13,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".Post" />
+        <activity android:name=".PostDetailsActivity" />
         <activity android:name=".FavoritesActivity" />
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/circle" />
 
-        <activity android:name=".PostActivity" />
-        <activity android:name=".BlogsActivity" />
+        <activity android:name=".CreateNewPostActivity" >
+
+        </activity>
+        <activity android:name=".PostListActivity" />
         <activity android:name=".LoginActivity">
 
         </activity>
+        <activity android:name=".NoItemInternetImage"></activity>
     </application>
 
 </manifest>

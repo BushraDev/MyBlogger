@@ -1,158 +1,90 @@
 package com.bushra.myblogger;
 
-import android.content.Context;
-import android.content.Intent;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class Post extends AppCompatActivity {
+public class Post implements Serializable
+{
 
-    private static final String EXTRA_POST = "com.bushra.myblogger.post";
+    private int pId;
+    private String pTitle;
+    private String pCategory;
+    private String pContent;
+    private String pDate;
+    private String pPhoto;
+    private int uId;
 
-    PostModel post;
+    public static Post getPost(JSONObject post) throws JSONException {
+        Post postModel=new Post();
+        postModel.setpId(post.getInt("p_id"));
+        postModel.setpTitle(post.getString("title"));
+        postModel.setpCategory(post.getString("category"));
+        postModel.setpContent(post.getString("content"));
+        postModel.setpDate(post.getString("date"));
+        postModel.setpPhoto(post.getString("photo"));
+        postModel.setuId(post.getInt("u_id"));
 
-    ImageView urPhoto, image, send;
-    TextView urName, date, title, content;
-    EditText comment;
-
-    RecyclerView mRecyclerview;
-    CommentAdapter mAdapter;
-
-
-    public static Intent newIntent(Context packageContext, PostModel post) {
-        Intent intent = new Intent(packageContext, Post.class);
-        intent.putExtra(EXTRA_POST, (Serializable) post);
-        return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post2);
-
-        post = (PostModel) getIntent().getSerializableExtra(EXTRA_POST);
-
-        mRecyclerview = findViewById(R.id.comment_recyclerview);
-        mRecyclerview.setLayoutManager(new LinearLayoutManager(Post.this));
-        setUpAdapter();
-
-
-        urPhoto = findViewById(R.id.ur_photo);
-
-        urName = findViewById(R.id.ur_name);
-        final String u_name = WsBlogLab.get(Post.this).getPostOwnerName(String.valueOf(post.getuId()));
-        urName.setText(u_name);
-
-        date = findViewById(R.id.date);
-        date.setText(post.getpDate());
-
-        image = findViewById(R.id.image);
-        String pimageUrl = WsBlogLab.get(Post.this).getServerUrl() + "\\" + post.getpPhoto();
-        Picasso.get().load(pimageUrl).into(image);
-
-        title = findViewById(R.id.title);
-        title.setText(post.getpTitle());
-
-        content = findViewById(R.id.content);
-        content.setText(post.getpContent());
-
-        comment = findViewById(R.id.comment);
-        send = findViewById(R.id.send);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WsBlogLab.get(Post.this).addComment(String.valueOf(post.getpId()), String.valueOf(post.getuId()), comment.getText().toString());
-                comment.setText("");
-                setUpAdapter();
-            }
-        });
-
+        return postModel;
     }
 
 
-    class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
-
-        ArrayList<String> comments;
-
-        public CommentAdapter(ArrayList<String> comment) {
-            comments = comment;
-        }
-
-        @NonNull
-        @Override
-        public CommentHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater layoutInflater = LayoutInflater.from(Post.this);
-            return new CommentHolder(layoutInflater, viewGroup);
-        }
-
-        @Override
-        public void onBindViewHolder(CommentHolder viewHolder, int i) {
-            String comment = comments.get(i);
-            viewHolder.bind(comment);
-        }
-
-        @Override
-        public int getItemCount() {
-            return comments.size();
-        }
-
-        public void setPosts(ArrayList<String> comment) {
-            comments = comment;
-        }
+    public int getpId() {
+        return pId;
     }
 
-    class CommentHolder extends RecyclerView.ViewHolder {
-        TextView mCommentTextView;
-
-        public CommentHolder(LayoutInflater inflater, ViewGroup viewGroup) {
-            super(inflater.inflate(R.layout.comment_list_item, viewGroup, false));
-            mCommentTextView = itemView.findViewById(R.id.comment_tv);
-
-        }
-
-        public void bind(String comment) {
-            String p_comment = comment;
-            mCommentTextView.setText(p_comment);
-        }
-
+    public void setpId(int pId) {
+        this.pId = pId;
     }
 
-    private void setUpAdapter()
+    public String getpTitle() {
+        return pTitle;
+    }
+
+    public void setpTitle(String pTitle) {
+        this.pTitle = pTitle;
+    }
+
+    public String getpCategory() {
+        return pCategory;
+    }
+
+    public void setpCategory(String pCategory) {
+        this.pCategory = pCategory;
+    }
+
+    public String getpContent() {
+        return pContent;
+    }
+
+    public void setpContent(String pContent) {
+        this.pContent = pContent;
+    }
+
+    public void setpDate(String pDate) {
+        this.pDate = pDate;
+    }
+
+    public String getpDate()
     {
+        return pDate;
+    }
 
-        WsBlogLab wsBlogLab=WsBlogLab.get(Post.this);
-        WsBlogLab.CommentsVolleyListiner listiner=new WsBlogLab.CommentsVolleyListiner() {
-            @Override
-            public void onsucss(ArrayList<String> comments) {
+    public String getpPhoto() {
+        return pPhoto;
+    }
 
-                if (mAdapter == null) {
-                    mAdapter = new CommentAdapter(comments);
-                    mRecyclerview.setAdapter(mAdapter);
-                }
-                else
-                    mAdapter.setPosts(comments);
-                    mAdapter.notifyDataSetChanged();
+    public void setpPhoto(String photo) {
+        this.pPhoto = photo;
+    }
 
-            }
-        };
+    public int getuId() {
+        return uId;
+    }
 
-
-        wsBlogLab.getComments(listiner,String.valueOf(post.getpId()));
+    public void setuId(int uId) {
+        this.uId = uId;
     }
 }

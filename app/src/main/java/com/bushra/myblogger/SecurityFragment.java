@@ -44,9 +44,9 @@ public class SecurityFragment extends Fragment
     class PostAdapter extends RecyclerView.Adapter<PostHolder>
     {
 
-        ArrayList<PostModel> postsArrayList;
+        ArrayList<Post> postsArrayList;
 
-        public PostAdapter(ArrayList<PostModel> posts)
+        public PostAdapter(ArrayList<Post> posts)
         {
             postsArrayList=posts;
         }
@@ -62,7 +62,7 @@ public class SecurityFragment extends Fragment
         @Override
         public void onBindViewHolder(@NonNull PostHolder viewHolder, int i)
         {
-            PostModel post = postsArrayList.get(i);
+            Post post = postsArrayList.get(i);
             viewHolder.bind(post);
         }
 
@@ -70,7 +70,7 @@ public class SecurityFragment extends Fragment
         public int getItemCount() {
             return postsArrayList.size();
         }
-        public void setPosts(ArrayList<PostModel> post)
+        public void setPosts(ArrayList<Post> post)
         {
             postsArrayList = post;
         }
@@ -78,7 +78,7 @@ public class SecurityFragment extends Fragment
 
     class PostHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        PostModel postModel;
+        Post post;
         ImageView mPostPhotoImageView,mPostShareImageView,mPostOwnerImageView;
         TextView mPostOwnerTextView,mPostTitleTextView,mPostDateTextView;
 
@@ -93,14 +93,14 @@ public class SecurityFragment extends Fragment
             mPostOwnerImageView=itemView.findViewById(R.id.p_owner_photo);
         }
 
-        public void bind(PostModel post)
+        public void bind(Post post)
         {
-            postModel = post;
-            String pimageUrl=WsBlogLab.get(getActivity()).getServerUrl()+"\\"+postModel.getpPhoto();
-            mPostTitleTextView.setText(postModel.getpTitle());
-            String u_name=WsBlogLab.get(getActivity()).getPostOwnerName(String.valueOf(postModel.getuId()));
+            this.post = post;
+            String pimageUrl= BlogLab.get(getActivity()).getServerUrl()+"\\"+ this.post.getpPhoto();
+            mPostTitleTextView.setText(this.post.getpTitle());
+            String u_name= BlogLab.get(getActivity()).getPostOwnerName(String.valueOf(this.post.getuId()));
             mPostOwnerTextView.setText(u_name);
-            mPostDateTextView.setText(postModel.getpDate());
+            mPostDateTextView.setText(this.post.getpDate());
             Picasso.get().load(pimageUrl).into(mPostPhotoImageView);
 
 //            ImageRequest imageRequest= new ImageRequest(pimageUrl, new Response.Listener<Bitmap>() {
@@ -119,7 +119,7 @@ public class SecurityFragment extends Fragment
 //            RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
 //            requestQueue.add(imageRequest);
 
-//            String uimageUrl=WsBlogLab.get(getActivity()).getServerUrl()+"\\"+WsBlogLab.get(getActivity()).getPostOwnerPhoto(String.valueOf(postModel.getuId()));
+//            String uimageUrl=BlogLab.get(getActivity()).getServerUrl()+"\\"+BlogLab.get(getActivity()).getPostOwnerPhoto(String.valueOf(post.getuId()));
 //            ImageRequest imageRequest2= new ImageRequest(uimageUrl, new Response.Listener<Bitmap>() {
 //                @Override
 //                public void onResponse(Bitmap response)
@@ -148,12 +148,12 @@ public class SecurityFragment extends Fragment
     private void setUpAdapter()
     {
 
-        WsBlogLab wsBlogLab=WsBlogLab.get(getActivity());
-        // ArrayList<PostModel> posts = wsBlogLab.getPostsArrayList();
+        BlogLab blogLab = BlogLab.get(getActivity());
+        // ArrayList<Post> posts = blogLab.getPostsArrayList();
 
-        WsBlogLab.VolleyListiner listiner=new WsBlogLab.VolleyListiner() {
+        BlogLab.VolleyListiner listiner=new BlogLab.VolleyListiner() {
             @Override
-            public void onsucss(ArrayList<PostModel> postModels) {
+            public void onsucss(ArrayList<Post> postModels) {
 
                 mAdapter = new PostAdapter(postModels);
                 mRecyclerview.setAdapter(mAdapter);
@@ -162,7 +162,7 @@ public class SecurityFragment extends Fragment
             }
         };
 
-        wsBlogLab.getSecurityPosts(listiner);
+        blogLab.getSecurityPosts(listiner);
     }
 
 }

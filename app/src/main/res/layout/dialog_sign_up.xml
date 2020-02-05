@@ -1,128 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/background"
-    android:paddingTop="20dp"
-    android:paddingRight="20dp"
-    android:paddingLeft="20dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:paddingBottom="10dp"
     >
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp"
-        android:background="@android:color/white">
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            >
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:background="@android:color/white">
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/galary_photo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
                 android:src="@drawable/user"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/camera_photo"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/camera"
-                app:civ_border_color="@android:color/white"
-                app:civ_border_width="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/galary_photo"
-                app:layout_constraintStart_toStartOf="@+id/galary_photo" />
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/camera_photo"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/camera"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/galary_photo"
+                    app:layout_constraintStart_toStartOf="@+id/galary_photo" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/u_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:backgroundTint="@color/colorRegisterhint"
                 android:hint="Full Name"
                 android:textColorHint="@color/colorSignInBtn"
                 android:textSize="15sp"
-                android:layout_marginBottom="5dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/galary_photo" />
 
             <EditText
                 android:id="@+id/u_email"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+
                 android:backgroundTint="@color/colorRegisterhint"
+                android:hint="E-mail"
                 android:textColorHint="@color/colorSignInBtn"
 
-                android:layout_height="wrap_content"
-                android:hint="E-mail"
                 android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/u_name" />
 
-                android:layout_marginBottom="5dp"/>
 
             <EditText
                 android:id="@+id/u_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
-                android:textSize="15sp"
+                android:layout_marginTop="5dp"
                 android:backgroundTint="@color/colorRegisterhint"
+                android:hint="Password"
                 android:textColorHint="@color/colorSignInBtn"
 
-                android:layout_marginBottom="5dp"/>
-
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/u_email" />
 
             <Button
                 android:id="@+id/u_birthdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/colorRegisterBtn"
                 android:hint="Select Your Birth Date"
                 android:textColorHint="@android:color/white"
-                android:backgroundTint="@color/colorRegisterBtn"
                 android:textSize="15sp"
-                android:layout_marginBottom="5dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/u_pass" />
 
             <RadioGroup
                 android:id="@+id/radio_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
-                >
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/u_birthdate">
 
                 <RadioButton
                     android:id="@+id/radioMale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="male"
-                    />
+                    android:text="male" />
 
                 <RadioButton
                     android:id="@+id/radioFemale"
@@ -132,20 +138,25 @@
 
             </RadioGroup>
 
+            <Button
+                android:id="@+id/create_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/colorRegisterhint"
+                android:text="Create Account"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_gender" />
 
-        </LinearLayout>
-        <Button
-            android:id="@+id/create_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/colorRegisterhint"
-            android:layout_gravity="bottom|end"
-            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+
+    </ScrollView>
 
 
 
-</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,28 +1,23 @@
 package com.bushra.myblogger;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import java.util.ArrayList;
 
 public class LoginFragment extends Fragment
 {
@@ -32,10 +27,6 @@ public class LoginFragment extends Fragment
 
     EditText userEmail,userPass;
     Button loginBtn,signUpBtn;
-
-    private FirebaseAuth mAuth;
-    LinearLayout loginLayout;
-    ProgressBar progressBar;
 
 
     public static Fragment newInstance()
@@ -48,14 +39,10 @@ public class LoginFragment extends Fragment
     {
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        loginLayout=v.findViewById(R.id.loginlayout);
+
         userEmail=v.findViewById(R.id.user_email);
         userPass=v.findViewById(R.id.user_pass);
         loginBtn=v.findViewById(R.id.login_btn);
-        progressBar = new ProgressBar(getActivity(),null,android.R.attr.progressBarStyleLarge);
-        progressBar.setIndeterminate(true);
-        progressBar.setVisibility(View.INVISIBLE);
-        loginLayout.addView(progressBar);
         loginBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -64,44 +51,37 @@ public class LoginFragment extends Fragment
                 final String email = userEmail.getText().toString();
                 final String pass = userPass.getText().toString();
 
-                if(email.matches(""))
+                if (userEmail.getText().toString().matches(""))
                     Toast.makeText(getActivity(),"please insert your email",Toast.LENGTH_SHORT).show();
-                else
-                    {
-                        if (pass.equals(""))
-                            Toast.makeText(getActivity(), "please insert your pass", Toast.LENGTH_SHORT).show();
-                        else
-                        {
-                            progressBar.setVisibility(View.VISIBLE);
+                else {
+                    if (!isEmailValid(userEmail.getText()))
+                        Toast.makeText(getActivity(), "please insert a valid email", Toast.LENGTH_SHORT).show();
+                    else {
+                        if (userPass.getText().toString().matches(""))
+                            Toast.makeText(getActivity(), "please insert your password", Toast.LENGTH_SHORT).show();
+                        else {
+                            BlogLab blogLab = BlogLab.get(getActivity());
+                            if (blogLab.haveNetwork()) {
+                                BlogLab.UserVolleyListiner listiner = new BlogLab.UserVolleyListiner() {
+                                    @Override
+                                    public void onsucss(User user) {
 
-                            mAuth = FirebaseAuth.getInstance();
-                            mAuth.signInWithEmailAndPassword(email,pass)
-                                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>()
-                                    {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task)
-                                        {
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            if(task.isSuccessful())
-                                            {
-                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                updateUI(user);
-                                            }
-                                            else
-                                            {
-                                                Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                updateUI(null);
+                                        checkUser(user, getActivity());
+                                    }
+                                };
 
-                                            }
-                                        }
-                                    });
+                                blogLab.getUser(email, pass, getActivity(), listiner);
+                            } else if (!blogLab.haveNetwork()) {
+                                Intent i = new Intent(getActivity(), NoItemInternetImage.class);
+                                startActivity(i);
+                            }
                         }
-
-
                     }
+                }
 
-            }
+
+                }
+
         });
 
         signUpBtn=v.findViewById(R.id.sign_up_btn);
@@ -121,18 +101,46 @@ public class LoginFragment extends Fragment
         return v;
     }
 
-    public  void updateUI(FirebaseUser currentUser)
+    public  static void checkUser(User user,Context context)
     {
-        if(currentUser==null)
+        Toast.makeText(context,user.getuId()+"",Toast.LENGTH_SHORT).show();
+        if(user != null)
         {
-            Intent loginIntent=new Intent(getActivity(),LoginActivity.class);
-            startActivity(loginIntent);
+            try
+            {
+                String MyPREFERENCES = "Bushra";
+                SharedPreferences sharedpreferences= context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE );
+                SharedPreferences.Editor editor= sharedpreferences.edit();
+                editor.putInt("id", user.getuId());
+                editor.putString("name", user.getuName());
+                editor.putString("email", user.getuEmail());
+                editor.putString("photoUrl", user.getuPhoto());
+                editor.commit();
+
+                sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                String name = sharedpreferences.getString("name", "gg");
+                int id = sharedpreferences.getInt("id", 5);
+                Log.e("here is name ",name+"");
+                Log.e("here is id ",id+"");
+
+                Intent i = PostListActivity.newIntent(context);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+                ((Activity)context).finish();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         else
         {
-            Intent userIntent=new Intent(getActivity(),BlogsActivity.class);
-            startActivity(userIntent);
+            Toast.makeText(context,"user not exist",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 

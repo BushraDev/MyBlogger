@@ -44,9 +44,9 @@ public class ProgrammingFragment extends Fragment
     class PostAdapter extends RecyclerView.Adapter<PostHolder>
     {
 
-        ArrayList <PostModel> postsArrayList;
+        ArrayList <Post> postsArrayList;
 
-        public PostAdapter(ArrayList<PostModel> posts)
+        public PostAdapter(ArrayList<Post> posts)
         {
             postsArrayList=posts;
         }
@@ -62,7 +62,7 @@ public class ProgrammingFragment extends Fragment
         @Override
         public void onBindViewHolder(@NonNull PostHolder viewHolder, int i)
         {
-            PostModel post = postsArrayList.get(i);
+            Post post = postsArrayList.get(i);
             viewHolder.bind(post);
         }
 
@@ -70,7 +70,7 @@ public class ProgrammingFragment extends Fragment
         public int getItemCount() {
             return postsArrayList.size();
         }
-        public void setPosts(ArrayList<PostModel> post)
+        public void setPosts(ArrayList<Post> post)
         {
             postsArrayList = post;
         }
@@ -78,7 +78,7 @@ public class ProgrammingFragment extends Fragment
 
     class PostHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        PostModel postModel;
+        Post post;
         ImageView mPostPhotoImageView,mPostShareImageView,mPostOwnerImageView;
         TextView mPostOwnerTextView,mPostTitleTextView,mPostDateTextView;
 
@@ -94,14 +94,14 @@ public class ProgrammingFragment extends Fragment
             itemView.setOnClickListener(this);
         }
 
-        public void bind(PostModel post)
+        public void bind(Post post)
         {
-            postModel = post;
-            String pimageUrl=WsBlogLab.get(getActivity()).getServerUrl()+"\\"+postModel.getpPhoto();
-            mPostTitleTextView.setText(postModel.getpTitle());
-            String u_name=WsBlogLab.get(getActivity()).getPostOwnerName(String.valueOf(postModel.getuId()));
+            this.post = post;
+            String pimageUrl= BlogLab.get(getActivity()).getServerUrl()+"\\"+ this.post.getpPhoto();
+            mPostTitleTextView.setText(this.post.getpTitle());
+            String u_name= BlogLab.get(getActivity()).getPostOwnerName(String.valueOf(this.post.getuId()));
             mPostOwnerTextView.setText(u_name);
-            mPostDateTextView.setText(postModel.getpDate());
+            mPostDateTextView.setText(this.post.getpDate());
             Picasso.get().load(pimageUrl).into(mPostPhotoImageView);
 
 //            ImageRequest imageRequest= new ImageRequest(pimageUrl, new Response.Listener<Bitmap>() {
@@ -121,7 +121,7 @@ public class ProgrammingFragment extends Fragment
 //            requestQueue.add(imageRequest);
 
 
-//            String uimageUrl=WsBlogLab.get(getActivity()).getServerUrl()+"\\"+WsBlogLab.get(getActivity()).getPostOwnerPhoto(String.valueOf(postModel.getuId()));
+//            String uimageUrl=BlogLab.get(getActivity()).getServerUrl()+"\\"+BlogLab.get(getActivity()).getPostOwnerPhoto(String.valueOf(post.getuId()));
 //            ImageRequest imageRequest2= new ImageRequest(uimageUrl, new Response.Listener<Bitmap>() {
 //                @Override
 //                public void onResponse(Bitmap response)
@@ -143,7 +143,7 @@ public class ProgrammingFragment extends Fragment
         @Override
         public void onClick(View view)
         {
-            Intent intent =Post.newIntent(getActivity(),postModel);
+            Intent intent = PostDetailsActivity.newIntent(getActivity(), post);
             startActivity(intent);
         }
     }
@@ -151,23 +151,18 @@ public class ProgrammingFragment extends Fragment
     private void setUpAdapter()
     {
 
-        WsBlogLab wsBlogLab=WsBlogLab.get(getActivity());
-        WsBlogLab.VolleyListiner listiner=new WsBlogLab.VolleyListiner() {
+        BlogLab blogLab = BlogLab.get(getActivity());
+        BlogLab.VolleyListiner listiner=new BlogLab.VolleyListiner()
+        {
             @Override
-            public void onsucss(ArrayList<PostModel> postModels) {
+            public void onsucss(ArrayList<Post> postModels) {
 
                     mAdapter = new PostAdapter(postModels);
                     mRecyclerview.setAdapter(mAdapter);
             }
         };
 
-        wsBlogLab.getProgrammingPosts(listiner);
-
-     //   mAdapter = new PostAdapter(posts);
-       //     mRecyclerview.setAdapter(mAdapter);
-
-      //  Toast.makeText(getActivity(), posts.size() + " mmmmmmmmm", Toast.LENGTH_SHORT).show();
-
+        blogLab.getProgrammingPosts(listiner);
 
     }
 

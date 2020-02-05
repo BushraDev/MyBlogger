@@ -2,15 +2,20 @@ package com.bushra.myblogger;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -20,8 +25,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 
-public class BlogsActivity extends AppCompatActivity
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class PostListActivity extends AppCompatActivity
 {
 
     private static final String UID_EXTRA = "com.bushra.myblogger.uuid";
@@ -41,17 +49,28 @@ public class BlogsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogs);
 
-        final int uId = getIntent().getIntExtra(UID_EXTRA, 0);
-
-        toolbar = findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-
-        tabLayout = findViewById(R.id.tab_layout);
+        initToolbar();
+        initNavigationMenu();
 
         viewPager = findViewById(R.id.view_pager);
-
+        setupViewPager(viewPager);
+        tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+        createPost = findViewById(R.id.create_post_fbtn);
+        createPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int uId = getIntent().getIntExtra(UID_EXTRA, 0);
+                Intent intent = CreateNewPostActivity.newIntent(PostListActivity.this, uId);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void setupViewPager(ViewPager viewPager)
+    {
         fm = getSupportFragmentManager();
 
         viewPager.setAdapter(new FragmentPagerAdapter(fm) {
@@ -86,59 +105,11 @@ public class BlogsActivity extends AppCompatActivity
                 return title;
             }
         });
-
-        createPost = findViewById(R.id.create_post_fbtn);
-        createPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int uId = getIntent().getIntExtra(UID_EXTRA, 0);
-                Intent intent = PostActivity.newIntent(BlogsActivity.this, uId);
-                startActivity(intent);
-            }
-        });
-
-        mDrawer = findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(this,mDrawer,R.string.open,R.string.close);
-        mDrawer.addDrawerListener(mToggle);
-        mToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navView = findViewById(R.id.nav_view);
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
-        {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
-            {
-                Class mActivity = null;
-
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_favorite:
-                        mActivity = FavoritesActivity.class;
-                        setTitle(menuItem.getTitle());
-                        break;
-                    default:
-                        mActivity = BlogsActivity.class;
-                        setTitle(menuItem.getTitle());
-                        break;
-                }
-                startActivity(new Intent(BlogsActivity.this, mActivity));
-                mDrawer.closeDrawers();
-
-                return true;
-            }
-
-        });
-
-
-
-
     }
 
+    public static Intent newIntent(Context bContext) {
 
-    public static Intent newIntent(Context bContext, int uId) {
-
-        Intent i = new Intent(bContext, BlogsActivity.class);
-        i.putExtra(UID_EXTRA, uId);
-
+        Intent i = new Intent(bContext, PostListActivity.class);
         return i;
 
     }
@@ -160,6 +131,64 @@ public class BlogsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initToolbar()
+    {
+        toolbar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+    }
+
+    private void initNavigationMenu()
+    {
+        navView = findViewById(R.id.nav_view);
+        mDrawer = findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this,mDrawer,toolbar,R.string.open,R.string.close)
+        {
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawer.setDrawerListener(mToggle);
+        mToggle.syncState();
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+            {
+                Class mActivity = null;
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_favorite:
+                        mActivity = FavoritesActivity.class;
+                        setTitle(menuItem.getTitle());
+                        break;
+                    default:
+                        mActivity = PostListActivity.class;
+                        break;
+                }
+                startActivity(new Intent(PostListActivity.this, mActivity));
+                mDrawer.closeDrawers();
+                return true;
+            }
+
+        });
+
+         Menu menu_navigation= navView.getMenu();
+
+         View navigation_header = navView.getHeaderView(0);
+
+        CircleImageView userPhoto=navigation_header.findViewById(R.id.nav_header_imageView);
+        TextView userName=navigation_header.findViewById(R.id.nav_header_uName);
+        TextView userEmail=navigation_header.findViewById(R.id.nav_header_uEmail);
+
+        SharedPreferences sharedpreferences;
+        final String MyPREFERENCES = "Bushra";
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        userName.setText(sharedpreferences.getString("name",null ));
+        userEmail.setText(sharedpreferences.getString("email",null ));
+        Picasso.get().load(BlogLab.uri+sharedpreferences.getString("photoUrl",null )).into(userPhoto);
+
     }
 
 

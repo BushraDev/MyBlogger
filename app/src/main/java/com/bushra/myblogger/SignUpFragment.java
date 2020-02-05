@@ -28,19 +28,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,13 +48,6 @@ public class SignUpFragment extends DialogFragment
     Bitmap bm;
     int yearOB,monthOB,dayOB;
     LinearLayout.LayoutParams layoutParams;
-    private FirebaseAuth mAuth;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
-    }
 
     @NonNull
     @Override
@@ -101,9 +85,7 @@ public class SignUpFragment extends DialogFragment
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
-                final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog datePickerDialog= new DatePickerDialog(getActivity(),new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -117,7 +99,6 @@ public class SignUpFragment extends DialogFragment
                 datePickerDialog.show();
             }
         });
-
 
         uGender=v.findViewById(R.id.radio_gender);
         maleBtn=v.findViewById(R.id.radioMale);
@@ -135,8 +116,7 @@ public class SignUpFragment extends DialogFragment
         });
 
         createAccount=v.findViewById(R.id.create_account);
-        createAccount.setOnClickListener(new View.OnClickListener()
-        {
+        createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
@@ -173,52 +153,8 @@ public class SignUpFragment extends DialogFragment
                                             final String email=uEmail.getText().toString();
                                             final String password = uPassword.getText().toString();
                                             final String birthdate = uBirthdate.getText().toString();
-                                            mAuth = FirebaseAuth.getInstance();
-                                            mAuth.createUserWithEmailAndPassword(email,password)
-                                                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>()
-                                                    {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<AuthResult> task)
-                                                        {
-                                                            if(task.isSuccessful())
-                                                            {
-
-                                                                UserModel userModel=new UserModel(name,email,password,birthdate,photo,genderType);
-                                                                FirebaseFirestore.getInstance().collection("Users")
-                                                                        .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                                        .set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if(task.isSuccessful())
-                                                                        {
-                                                                            if (getActivity() != null)
-
-                                                                                Toast.makeText(getActivity(), "User registered Successfully", Toast.LENGTH_SHORT).show();
-
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (getActivity() != null)
-
-                                                                                Toast.makeText(getActivity(), "Registeration Failed ", Toast.LENGTH_SHORT).show();
-
-                                                                        }
-                                                                    }
-                                                                });
-
-                                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                                updateUI(user);
-                                                                getDialog().dismiss();
-                                                            }
-                                                            else
-                                                                {
-                                                                    if (getActivity() != null)
-                                                                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                                    updateUI(null);
-                                                                }
-                                                        }
-                                                    });
-
+                                            BlogLab.get(getActivity()).addUser(name, email, password, birthdate, genderType, photo,getActivity());
+                                            getDialog().dismiss();
                                         }
 
                                     }
@@ -242,8 +178,7 @@ public class SignUpFragment extends DialogFragment
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
 
         Resources res = getResources();
@@ -252,7 +187,7 @@ public class SignUpFragment extends DialogFragment
         View title = getDialog().findViewById(titleId);
         if (title != null)
         {
-             title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             ((TextView)title).setTextColor(getResources().getColor(R.color.colorSignInBtn));
         }
 
@@ -261,15 +196,15 @@ public class SignUpFragment extends DialogFragment
 
     public String BitMapToString(Bitmap bitmap)
 
-       {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] b = baos.toByteArray();
-            String temp = Base64.encodeToString(b, Base64.DEFAULT);
-            return temp;
-        }
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 
-        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -293,32 +228,25 @@ public class SignUpFragment extends DialogFragment
             uGalaryPhoto.setImageBitmap(bm);
         }
     }
-    boolean isEmailValid(CharSequence email)
-    {
+    boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public  void updateUI(FirebaseUser currentUser)
+
+    public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight)
     {
-        if(currentUser==null)
-        {
-            if (getActivity() != null)
-            {
-                Intent loginIntent=new Intent(getActivity(),LoginActivity.class);
-                startActivity(loginIntent);
-            }
-
-        }
-        else
-        {
-            if (getActivity() != null)
-            {
-                Intent userIntent=new Intent(getActivity(),BlogsActivity.class);
-                startActivity(userIntent);
-            }
-
-        }
+        // Read in the dimensions of the image on disk
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        float srcWidth = options.outWidth;
+        float srcHeight = options.outHeight;
+        // Figure out how much to scale down by
+        int inSampleSize = 1;
+        options = new BitmapFactory.Options();
+        options.inSampleSize = inSampleSize;
+        // Read in and create final bitmap
+        return BitmapFactory.decodeFile(path, options);
     }
-
 
 }

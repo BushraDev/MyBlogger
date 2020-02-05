@@ -3,14 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="172dp"
     android:background="@color/colorRegisterhint"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
-    android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 
@@ -19,15 +17,34 @@
         android:id="@+id/nav_header_imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
-
+        android:layout_margin="@dimen/spacing_large"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@android:color/white"
         android:src="@drawable/user" />
 
-    <TextView
-        android:id="@+id/nav_header_textView"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="User Name"
-        android:textColor="@android:color/white"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_margin="@dimen/spacing_large"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nav_header_uName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:text="User Name"
+            android:textColor="@android:color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/nav_header_uEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Email"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+    </LinearLayout>
+
 </LinearLayout>

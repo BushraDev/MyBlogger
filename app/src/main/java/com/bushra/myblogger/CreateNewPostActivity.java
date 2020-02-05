@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PostActivity extends AppCompatActivity
+public class CreateNewPostActivity extends AppCompatActivity
 {
     private static final String EXTRA_UID="com.bushra.myblogger.uid";
     ImageView pPhoto;
@@ -147,8 +147,8 @@ public class PostActivity extends AppCompatActivity
             {
                 final String pho=BitMapToString(bm);
 
-                WsBlogLab.get(PostActivity.this).addPost(category,title,content,date,uId,pho);
-                    startActivity(BlogsActivity.newIntent(PostActivity.this,uId));
+                BlogLab.get(CreateNewPostActivity.this).addPost(category,title,content,date,uId,pho);
+                    startActivity(PostListActivity.newIntent(CreateNewPostActivity.this));
             }
         });
 
@@ -180,7 +180,7 @@ public class PostActivity extends AppCompatActivity
 
     public static Intent newIntent(Context c, int uId)
     {
-        Intent i = new Intent(c,PostActivity.class);
+        Intent i = new Intent(c, CreateNewPostActivity.class);
         i.putExtra(EXTRA_UID,uId);
         return i;
     }
