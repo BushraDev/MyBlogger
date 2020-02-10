@@ -6,9 +6,10 @@
     <string name="sign_up_title">Create New Account</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="error">Error !</string>
     <string name="network_connection_timeout_error">Connection timeout error</string>
     <string name="auth_failure_error">server couldn\'t find the authenticated request</string>
-    <string name="Server_error">Server is not responding</string>
+    <string name="server_error">Server is not responding</string>
     <string name="network_connection_error">Your device is not connected to internet</string>
     <string name="Parse_error">Parse Error (because of invalid json or xml)</string>
     <string name="unknown_error">An unknown error occurred</string>

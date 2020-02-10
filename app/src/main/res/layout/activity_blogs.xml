@@ -11,60 +11,85 @@
     tools:context=".PostListActivity"
     >
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:background="@color/grey_10"
         >
+
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/main_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tool_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorRegisterhint"
-                app:titleTextColor="@android:color/white">
-            </androidx.appcompat.widget.Toolbar>
+                android:background="@android:color/white"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:titleTextColor="@color/colorPrimary" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_10" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/programming_posts_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/main_nav"
+            android:layout_below="@+id/main_app_bar"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:scrollbars="none"
+            android:scrollingCache="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+        <LinearLayout
+            android:id="@+id/main_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_10" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorRegisterhint"
-                app:tabIndicatorColor="@color/colorSignInBtn"
-                app:tabSelectedTextColor="@color/colorSignInBtn"
-                android:layoutDirection="ltr"
-                app:tabTextColor="@android:color/white">
-            </com.google.android.material.tabs.TabLayout>
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/white"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:tabIndicatorHeight="0dp" />
+
+        </LinearLayout>
 
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-
-
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/create_post_fbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:contentDescription="add post"
-            android:src="@drawable/ic_edit_black_24dp"
-            android:backgroundTint="@color/colorRegisterhint"
-            />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
+    </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

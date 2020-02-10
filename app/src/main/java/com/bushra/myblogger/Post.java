@@ -15,9 +15,22 @@ public class Post implements Serializable
     private String pContent;
     private String pDate;
     private String pPhoto;
+    private int pLikes;
+    private int pComments;
     private int uId;
+    public boolean progress = false;
 
-    public static Post getPost(JSONObject post) throws JSONException {
+    public Post(boolean progress) {
+        this.progress = progress;
+    }
+    public Post() {
+
+    }
+
+
+
+    public static Post getPost(JSONObject post) throws JSONException
+    {
         Post postModel=new Post();
         postModel.setpId(post.getInt("p_id"));
         postModel.setpTitle(post.getString("title"));
@@ -26,10 +39,27 @@ public class Post implements Serializable
         postModel.setpDate(post.getString("date"));
         postModel.setpPhoto(post.getString("photo"));
         postModel.setuId(post.getInt("u_id"));
+        postModel.setpLikes(post.getInt("likes"));
+        postModel.setpComments(post.getInt("comments"));
 
         return postModel;
     }
 
+    public int getpLikes() {
+        return pLikes;
+    }
+
+    public void setpLikes(int pLikes) {
+        this.pLikes = pLikes;
+    }
+
+    public int getpComments() {
+        return pComments;
+    }
+
+    public void setpComments(int pComments) {
+        this.pComments = pComments;
+    }
 
     public int getpId() {
         return pId;

@@ -1,8 +1,10 @@
 package com.bushra.myblogger;
 
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 
@@ -24,10 +27,9 @@ public class LoginFragment extends Fragment
 
     private static final String DIALOG_SIGN_UP = "DialogSignUp";
 
-
-    EditText userEmail,userPass;
-    Button loginBtn,signUpBtn;
-
+    private EditText userEmail,userPass;
+    private Button loginBtn,signUpBtn;
+    private static ProgressDialog progress;
 
     public static Fragment newInstance()
     {
@@ -62,10 +64,15 @@ public class LoginFragment extends Fragment
                         else {
                             BlogLab blogLab = BlogLab.get(getActivity());
                             if (blogLab.haveNetwork()) {
+                                progress = new ProgressDialog(getActivity());
+                                progress.setMessage("Logging in...");
+                                progress.setCancelable(false);
+                                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                progress.show();
                                 BlogLab.UserVolleyListiner listiner = new BlogLab.UserVolleyListiner() {
                                     @Override
                                     public void onsucss(User user) {
-
+                                        progress.dismiss();
                                         checkUser(user, getActivity());
                                     }
                                 };
@@ -91,9 +98,10 @@ public class LoginFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                FragmentManager manager = getFragmentManager();
-                SignUpFragment dialog = new SignUpFragment();
-                dialog.show(manager, DIALOG_SIGN_UP);
+                Intent i = new Intent(getActivity(),SignUpActivity.class);
+                startActivity(i);
+                getActivity().finish();
+
             }
 
         });
@@ -101,9 +109,10 @@ public class LoginFragment extends Fragment
         return v;
     }
 
+
+
     public  static void checkUser(User user,Context context)
     {
-        Toast.makeText(context,user.getuId()+"",Toast.LENGTH_SHORT).show();
         if(user != null)
         {
             try
@@ -135,13 +144,26 @@ public class LoginFragment extends Fragment
         }
         else
         {
-            Toast.makeText(context,"user not exist",Toast.LENGTH_SHORT).show();
+            final AlertDialog.Builder dialog=new AlertDialog.Builder(context);
+            dialog.setMessage(  "User not exist\nplease check your email and password , then try again");
+            dialog.setCancelable(true);
+
+            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    dialogInterface.cancel();
+                }
+            });
+
+            dialog.create();
+            dialog.show();
         }
     }
 
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-
 
 }

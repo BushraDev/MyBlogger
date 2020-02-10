@@ -44,6 +44,7 @@
                 android:id="@+id/user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/colorSignInBtn"
                 android:hint="E_mail"
@@ -53,25 +54,31 @@
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/user_pass"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:drawableStart="@drawable/ic_email"
+                android:drawableTint="@color/colorAccent"
+                android:drawablePadding="8dp"/>
 
             <EditText
                 android:id="@+id/user_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-
+                android:inputType="textPassword"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/colorSignInBtn"
-                android:hint=" Password"
+                android:hint="Password"
                 android:textColor="@color/colorRegisterhint"
                 android:textColorHint="@color/colorRegisterhint"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/login_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
 
-            <Button
+                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                android:drawableTint="@color/colorAccent"
+                android:drawablePadding="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,7 +92,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sign_up_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

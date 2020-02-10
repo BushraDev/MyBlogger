@@ -6,7 +6,9 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User
+import java.io.Serializable;
+
+public class User implements Serializable
 {
 
     private int uId;
